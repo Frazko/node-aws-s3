@@ -1,36 +1,58 @@
-/*
- * Copyright 2013. Amazon Web Services, Inc. All Rights Reserved.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-**/
+var express = require("express"),
+    aws = require("aws-sdk"),
+    bodyParser = require("body-parser"),
+    multer = require("multer"),
+    multerS3 = require("multer-s3");
 
-// Load the SDK and UUID
-var AWS = require('aws-sdk');
-var uuid = require('node-uuid');
+var accessKeyId = process.env.AWS_ACCESS_KEY || "AKIAITQ3RAUMMG3MP56A";
+var secretAccessKey =
+    process.env.AWS_SECRET_KEY || "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";
 
-// Create an S3 client
-var s3 = new AWS.S3();
+aws.config.update({
+    secretAccessKey: secretAccessKey,
+    accessKeyId: accessKeyId,
+    region: "us-east-1"
+});
 
-// Create a bucket and upload something into it
-var bucketName = 'node-sdk-sample-' + uuid.v4();
-var keyName = 'hello_world.txt';
+var app = express(),
+    s3 = new aws.S3();
 
-s3.createBucket({Bucket: bucketName}, function() {
-  var params = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
-  s3.putObject(params, function(err, data) {
-    if (err)
-      console.log(err)
-    else
-      console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
-  });
+app.use(bodyParser.json());
+
+var upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: "instapaz",
+        acl: "public-read",
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        key: function(req, file, cb) {
+            console.log(file);
+            cb(null, Date.now() + "_" + file.originalname); //use Date.now() for unique file keys
+        }
+    })
+});
+
+//open in browser to see upload form
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+    var params = {
+        Bucket: "instapaz"
+    };
+
+    s3.listObjects(params, (err, data) => {
+        if (err) throw err;
+        data.Contents.map(item => {
+            console.log("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
+            // console.log(item);
+        });
+    });
+});
+
+//used by upload form
+app.post("/upload", upload.array("photo", 1), (req, res, next) => {
+    res.send("Uploaded!");
+});
+
+app.listen(3000, () => {
+    console.log("Example app listening on port 3000!");
 });

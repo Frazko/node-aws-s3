@@ -3,9 +3,8 @@ var router = express.Router();
 var aws = require("aws-sdk");
 
 router.get("/", (req, res, next) => {
-    // res.render("photos", { title: "Welcome this is home" });
-    // var photos = []; //new Set();
-    var photos = ["geddy", "neil", "alex"];
+    var photos = new Set();
+    // var photos = [];
 
     var params = {
         Bucket: "instapaz"
@@ -15,16 +14,13 @@ router.get("/", (req, res, next) => {
         if (err) throw err;
         data.Contents.map(item => {
             // console.log(item);
-            // photos.add("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
-            photos.push("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
+            photos.add("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
+            // photos.push("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
             console.log("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
         });
 
-        res.render("photos", { photos: photos, title: "Welcome this is home" });
+        res.render("photos", { photos: photos, title: "Lista de fotos en AWS S3" });
     });
-
-    // res.render("photos", { photos: photos, title: "Welcome this is home" });
-    // res.render("photos", { title: "Welcome this is home" });
 });
 
 module.exports = router;

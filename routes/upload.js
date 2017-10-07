@@ -4,7 +4,7 @@ var express = require("express"),
     Datastore = require("nedb"),
     multer = require("multer"),
     aws = require("aws-sdk"),
-    config = require("./config/");
+    config = require("../config/");
 // https://github.com/louischatriot/nedb
 //
 /* Multer set storage location*/
@@ -45,7 +45,8 @@ router.post("/", upload.single("image"), function(req, res, next) {
                 console.log("Error uploading data: ", err);
             } else {
                 //delete local file
-                console.log("delete local file", data);
+                console.log("Upload Complete", data);
+                // console.log("..delete local file", data);
                 // fs.unlinkSync(req.file.path);
                 //save image name to database
                 // var img = {

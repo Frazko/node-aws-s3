@@ -58,10 +58,10 @@ router.post("/", upload.single("image"), function(req, res, next) {
                 //     // newDoc is the newly inserted document, including its _id
                 //     // newDoc has no key called notToBeSaved since its value was undefined
                 // });
+                res.redirect("/photos");
             }
         }
     );
-    res.redirect("/");
 });
 
 aws.config.update({ region: "us-east-1" });

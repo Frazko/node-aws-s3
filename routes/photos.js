@@ -19,7 +19,10 @@ router.get("/", (req, res, next) => {
             console.log("https://" + params.Bucket + ".s3.amazonaws.com/" + item.Key);
         });
 
-        res.render("photos", { photos: photos, title: "Lista de fotos en AWS S3" });
+        res.render("photos", {
+            photos: photos,
+            title: "[Lista de fotos en AWS S3]"
+        });
     });
 });
 

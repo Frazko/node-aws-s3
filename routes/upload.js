@@ -65,12 +65,8 @@ router.post("/", upload.single("image"), function(req, res, next) {
 });
 
 aws.config.update({ region: "us-east-1" });
-// dev.sociogators.files
-/* GET home page. */
 router.get("/", function(req, res, next) {
-    //db.find({}, function(err, img) {
-    res.render("upload" /*{ images: img }*/ );
-    //});
+    res.render("upload", { title: "[Subir fotos a AWS S3]" });
 });
 
 module.exports = router;

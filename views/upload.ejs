@@ -5,6 +5,8 @@
 	<title></title>
 </head>
 <body> 
+    <h1><%= title %></h1>
+	<%- include('menu'); %>
 	<form id="uploadForm" enctype="multipart/form-data" method="post" action="/upload">
 		<input type="file" name="image" accept="image/*" />
 		<input type="submit" value="Upload File" name="submit">

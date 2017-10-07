@@ -2,13 +2,13 @@ var express = require("express");
 var router = express.Router();
 //
 var users = require("./users");
-var list = require("./list");
+var photos = require("./photos");
 var home = require("./home");
 var upload = require("./upload");
 
 router.use("/", home);
 router.use("/users", users);
-router.use("/photos", list);
+router.use("/photos", photos);
 router.use("/upload", upload);
 
 module.exports = router;

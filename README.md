@@ -42,7 +42,8 @@ creates a bucket, and uploads files to that bucket. and fetch a list of images i
 create the file to upload. All you need to do is run it:
 
     nodemon
-    and open [http://localhost:4000](http://localhost:4000)
+
+And open [http://localhost:4000](http://localhost:4000)
 
 The S3 documentation has a good overview of the [restrictions for bucket names](http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)
 for when you start making your own buckets.

@@ -23,7 +23,7 @@ to connect to AWS. You can do this by creating a file named "credentials" at ~/.
 Save this format to your config files
 
     {
-        "host": "http://localhost:3000",
+        "host": "http://localhost:4000",
         "S3AccessKey": "<your access key id>",
         "S3Secret": "<your secret key>",
         "S3Bucket": "<your bucket>",
@@ -42,6 +42,7 @@ creates a bucket, and uploads files to that bucket. and fetch a list of images i
 create the file to upload. All you need to do is run it:
 
     nodemon
+    and open [http://localhost:4000](http://localhost:4000)
 
 The S3 documentation has a good overview of the [restrictions for bucket names](http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)
 for when you start making your own buckets.

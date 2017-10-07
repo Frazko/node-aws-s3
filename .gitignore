@@ -1,10 +1,9 @@
-<<<<<<< HEAD
+
 config.json
 node_modules
 npm-debug.log
 config/development.json
 config/production.json
-=======
 # Logs
 logs
 *.log
@@ -64,4 +63,3 @@ typings/
 # dotenv environment variables file
 .env
 
->>>>>>> 926331a11ae832d0f619d235654f157b940363b5

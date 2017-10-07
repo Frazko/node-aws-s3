@@ -16,8 +16,13 @@ to connect to AWS. You can do this by creating a file named "credentials" at ~/.
 (C:\Users\USER_NAME\.aws\ for Windows users) and saving the following lines in the file:
 
     [default]
-    aws_access_key_id = <your access key id>
-    aws_secret_access_key = <your secret key>
+    {
+        "host": "http://localhost:3000",
+        "S3AccessKey": "<your access key id>",
+        "S3Secret": "<your secret key>",
+        "S3Bucket": "<your bucket>",
+        "dbURL": "<your mongodb mlab url>"
+    }
 
 See the [Security Credentials](http://aws.amazon.com/security-credentials) page.
 It's also possible to configure your credentials via a configuration file or
@@ -30,7 +35,7 @@ This sample application connects to Amazon's [Simple Storage Service (S3)](http:
 creates a bucket, and uploads a file to that bucket. The script will automatically
 create the file to upload. All you need to do is run it:
 
-    node sample.js
+    nodemon
 
 The S3 documentation has a good overview of the [restrictions for bucket names](http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)
 for when you start making your own buckets.

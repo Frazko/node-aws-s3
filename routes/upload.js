@@ -1,10 +1,10 @@
-var express = require("express");
-var router = express.Router();
-var fs = require("fs");
-var Datastore = require("nedb");
-// var db = new Datastore({ filename: "db/poster", autoload: true });
-var multer = require("multer");
-var aws = require("aws-sdk");
+var express = require("express"),
+    router = express.Router(),
+    fs = require("fs"),
+    Datastore = require("nedb"),
+    multer = require("multer"),
+    aws = require("aws-sdk"),
+    config = require("./config/");
 // https://github.com/louischatriot/nedb
 //
 /* Multer set storage location*/
@@ -24,16 +24,17 @@ var upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 52428800 }
 });
+
 aws.config.update({
-    accessKeyId: "AKIAITQ3RAUMMG3MP56A",
-    secretAccessKey: "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"
+    accessKeyId: config.S3AccessKey,
+    secretAccessKey: config.S3Secret
 });
 
 // Upload images
 router.post("/", upload.single("image"), function(req, res, next) {
     var s3 = new aws.S3();
     s3.upload({
-            Bucket: "instapaz",
+            Bucket: config.S3Bucket,
             Key: Date.now() + req.file.originalname, //poster,
             ACL: "public-read", // your permisions
             ContentType: "image/jpeg",

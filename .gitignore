@@ -2,6 +2,8 @@
 config.json
 node_modules
 npm-debug.log
+config/development.json
+config/production.json
 =======
 # Logs
 logs

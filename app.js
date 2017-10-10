@@ -9,8 +9,12 @@ var express = require("express"),
     ejs = require("ejs"),
     //Import imgProcessor module which we would implement later
     imgProc = require("./imgProcessor");
+const { maxFileSize } = require("./config");
+const { urlencoded, json } = require("body-parser");
 
 // view engine setup
+app.use(urlencoded({ limit: maxFileSize, extended: true }));
+app.use(json({ limit: maxFileSize }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(logger("dev"));

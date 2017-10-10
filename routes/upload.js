@@ -35,8 +35,14 @@ aws.config.update({
 // Upload images
 router.post("/", upload.single("image"), function(req, res, next) {
     var s3 = new aws.S3();
+    console.log("====================================");
+    console.log(req.file);
+    console.log("------------------------------------");
+    console.log(req.body);
+    console.log("====================================");
+    if (!req.file) return;
     //Call the convertImgs method and pass the image files as its argument
-    imgProc.convertImgs(req.file).then(imageBuffer => {
+    imgProc.convertImgs(req.file).then(image => {
         //After all image processing finished, send the base64 image string to client
         // res.json(imageStringArray);
         s3.upload({
@@ -44,7 +50,7 @@ router.post("/", upload.single("image"), function(req, res, next) {
                 Key: Date.now() + req.file.originalname,
                 ACL: "public-read", // your permisions
                 ContentType: "image/jpeg",
-                Body: imageBuffer
+                Body: image
             },
             (err, data) => {
                 if (err) {
@@ -71,10 +77,6 @@ router.post("/", upload.single("image"), function(req, res, next) {
             }
         );
     });
-    //
-    /*
-                              
-                            */
 });
 
 aws.config.update({ region: "us-east-1" });

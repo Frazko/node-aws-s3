@@ -27,6 +27,10 @@ router.post("/", function(req, res, next) {
       console.log("Got a field name:", name);
       dbDocPath = field;
     })
+    .on("progress", function(bytesReceived, bytesExpected) {
+      var percent_complete = bytesReceived / bytesExpected * 100;
+      console.log("Progress::::: " + percent_complete.toFixed(2));
+    })
     .on("file", function(name, file) {
       console.log("Got a File:", name);
 
@@ -36,54 +40,42 @@ router.post("/", function(req, res, next) {
       let filename = file.name; // Date.now() + "_" + file.name;
 
       fs.rename(file.path, path.join(form.uploadDir, filename));
-
-      // every time a file has been uploaded successfully,
-      // rename it to it's orignal name
-
       var bucket = new aws.S3();
 
-      //   bucket.putObject(
-      //     {
-      //       Bucket: "instapaz",
-      //       Key: filename,
-      //       ContentType: "image/jpeg",
-      //       Body: fs.createReadStream(path.join(form.uploadDir, filename)),
-      //       ACL: "public-read"
-      //     },
-      //     (perr, pres) => {
-      //       console.log("Uploading Photo ");
-      //       if (perr) {
-      //         console.log("Error uploading data: ", perr);
-      //       } else {
-      //         fs.unlinkSync(path.join(form.uploadDir, filename));
-      //         console.log("Successfully uploaded data", pres);
-      //       }
-      //     }
-      //   );
-
-      //   imgProc.convertImgs(__dirname + "/uploads/" + filename).then(image => {
       imgProc
         .convertImgs(process.env.PWD + "/uploads/" + filename)
         .then(image => {
           console.log("convertImgs success", image);
-          bucket.upload(
-            {
+          bucket
+            .upload({
               Bucket: config.S3Bucket,
               Key: Date.now() + filename,
               ACL: "public-read", // your permisions
               ContentType: "image/jpeg",
               Body: image
-            },
-            (err, data) => {
+            })
+            .on("httpUploadProgress", function(evt) {
+              console.log("Progress:", evt.loaded, "/", evt.total);
+            })
+            .send((err, data) => {
               if (err) {
                 console.log("Error uploading data: ", err);
               } else {
                 //delete local file
                 console.log("Successfully Upload Complete", data);
                 //   res.redirect("/photos");
+                // fs.unlinkSync(process.env.PWD + "/uploads/" + filename);
+                fs.unlink(process.env.PWD + "/uploads/" + filename, err => {
+                  if (err) return console.log("Removing file error:", err);
+                  console.log("file deleted successfully");
+                });
+                console.log("Removing image " + filename);
               }
-            }
-          );
+            });
+        })
+        .catch(err => {
+          // handle an exception
+          console.log("imgProc -- Error", err);
         });
     })
     .on("error", function(err) {

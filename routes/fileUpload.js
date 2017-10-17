@@ -16,23 +16,29 @@ aws.config.update({
 });
 
 router.post("/", function(req, res, next) {
-  console.log("...Got /upload");
+  console.log("...Got /fileUpload");
   var form = new formidable.IncomingForm();
-  console.log("...  2");
+  console.log("...  1 - Formidable.incomming");
 
   form
     .parse(req)
     .on("field", function(name, field) {
+      console.log(" ");
+      console.log("     on field");
+      console.log(" ");
       //   console.log("Got a field:", field);
-      console.log("Got a field name:", name);
+      console.log("2 Got a field name:", name, field);
       dbDocPath = field;
     })
     .on("progress", function(bytesReceived, bytesExpected) {
       var percent_complete = bytesReceived / bytesExpected * 100;
-      console.log("Progress::::: " + percent_complete.toFixed(2));
+      console.log("3 Progress::::: " + percent_complete.toFixed(2));
     })
     .on("file", function(name, file) {
-      console.log("Got a File:", name);
+      console.log(" ");
+      console.log("     on file");
+      console.log("------    4 Got a File:", file, name);
+      console.log(" ");
 
       // store all uploads in the /uploads directory
       form.uploadDir = "uploads";

@@ -75,7 +75,7 @@ router.post("/", function(req, res, next) {
                   console.log("file deleted successfully");
                 });
                 console.log("Removing image " + filename);
-                res.redirect("/photos");
+                // res.redirect("/photos");
               }
             });
         })

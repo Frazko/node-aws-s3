@@ -69,13 +69,13 @@ router.post("/", function(req, res, next) {
               } else {
                 //delete local file
                 console.log("Successfully Upload Complete", data);
-                //   res.redirect("/photos");
                 // fs.unlinkSync(process.env.PWD + "/uploads/" + filename);
                 fs.unlink(process.env.PWD + "/uploads/" + filename, err => {
                   if (err) return console.log("Removing file error:", err);
                   console.log("file deleted successfully");
                 });
                 console.log("Removing image " + filename);
+                res.redirect("/photos");
               }
             });
         })
